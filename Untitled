@@ -1,0 +1,26 @@
+from core.fetcher import BaseFetcher
+from bs4 import BeautifulSoup
+
+def run_test():
+    target_url = "https://quotes.toscrape.com/"
+    fetcher = BaseFetcher()
+    
+    print(f"[+] Extrayendo datos de: {target_url}")
+    html = fetcher.fetch(target_url)
+    
+    if not html:
+        print("[-] Error: No se obtuvo respuesta del sitio.")
+        return
+
+    soup = BeautifulSoup(html, "html.parser")
+    quotes = soup.find_all("div", class_="quote")
+    
+    print(f"[+] Total de elementos encontrados: {len(quotes)}\n")
+    for q in quotes[:3]:
+        text = q.find("span", class_="text").get_text()
+        author = q.find("small", class_="author").get_text()
+        print(f"• {author}: {text}")
+
+if __name__ == "__main__":
+    run_test()
+    
